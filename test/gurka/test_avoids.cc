@@ -104,7 +104,7 @@ protected:
                               {"BD", {{"highway", "tertiary"}, {"name", "2nd"}}},
                               {"DE", {{"highway", "tertiary"}, {"name", "2nd"}}},
                               {"EF", {{"highway", "tertiary"}, {"name", "2nd"}}}};
-    const auto layout = gurka::detail::map_to_coordinates(ascii_map, 10);
+    const auto layout = gurka::detail::map_to_coordinates(ascii_map, 10, {1.0, 1.0});
     // Add low length limit for exclude_polygons so it throws an error
     avoid_map = gurka::buildtiles(layout, ways, {}, {}, "test/data/gurka_avoids",
                                   {{"service_limits.max_exclude_polygons_length", "1000"}});
@@ -210,6 +210,8 @@ TEST_F(AvoidTest, TestAvoidShortcutsTruck) {
     }
   }
 
+  // 2 shortcuts + 2 edges
+  ASSERT_EQ(avoid_edges.size(), 4);
   ASSERT_EQ(found_shortcuts, 2);
 }
 
@@ -239,6 +241,5 @@ INSTANTIATE_TEST_SUITE_P(AvoidPolyProfilesTest,
                                            "pedestrian",
                                            "motorcycle",
                                            "motor_scooter",
-                                           "hov",
                                            "taxi",
                                            "bus"));
